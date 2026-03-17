@@ -4,7 +4,7 @@ import base64
 from streamlit_option_menu import option_menu 
 from backend import Preprocessing, LSTM_Model
 
-# --- 1. Konfigurasi Halaman ---
+
 st.set_page_config(
     page_title="Sentimen Gojek",
     page_icon="🛵",
@@ -12,7 +12,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed" 
 )
 
-# --- 2. Custom CSS ---
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -75,11 +74,10 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Inisialisasi Session State ---
 if 'model_lstm' not in st.session_state:
     st.session_state['model_lstm'] = LSTM_Model()
 
-# --- 3. Header & Penjelasan Sistem ---
+
 def get_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
@@ -104,7 +102,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- 4. Navigasi ---
 selected = option_menu(
     menu_title=None, 
     options=["Pelatihan & Evaluasi", "Prediksi Sentimen"],
@@ -117,9 +114,9 @@ selected = option_menu(
     }
 )
 
-# =========================================================
+
 # HALAMAN 1: PELATIHAN & EVALUASI
-# =========================================================
+
 if selected == "Pelatihan & Evaluasi":
     st.markdown('<div class="css-card">', unsafe_allow_html=True)
     st.subheader("Unggah Dataset")
@@ -206,9 +203,8 @@ if selected == "Pelatihan & Evaluasi":
             
     st.markdown('</div>', unsafe_allow_html=True)
 
-# =========================================================
 # HALAMAN 2: PREDIKSI MANUAL (REVISI)
-# =========================================================
+
 else:
     col_in, col_out = st.columns([1, 1])
     
