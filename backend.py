@@ -9,7 +9,7 @@ from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
 class Preprocessing:
     def __init__(self):
-        # 1. Kamus Gaul Gojek
+        # 1. Normaalization
         self.norm_dict = {
             'apk': 'aplikasi', 'app': 'aplikasi', 'bgt': 'banget', 'bgtt': 'banget',
             'tdk': 'tidak', 'gak': 'tidak', 'gk': 'tidak', 'ga': 'tidak', 'enggak': 'tidak',
@@ -76,18 +76,16 @@ class LSTM_Model:
         
         pred = self.model.predict(padded)
         
-        # Menghitung persentase keyakinan (Confidence Score)
         if pred.shape[-1] == 1:
             prob = float(pred[0][0])
             label_index = int(prob > 0.5)
-            # Jika tebakannya positif (1), probabilitas aslinya. Jika negatif (0), sisa dari 100%
+
             confidence = prob if label_index == 1 else (1.0 - prob)
         else:
             label_index = int(np.argmax(pred))
             confidence = float(np.max(pred))
         
         labels = ["Negatif", "Positif"] 
-        # Mengembalikan 2 nilai sekaligus: Label dan Persentase
         return labels[label_index], confidence
 
     def evaluate_model(self, df, text_col, label_col):
@@ -122,8 +120,7 @@ class LSTM_Model:
         else:
             y_pred = np.argmax(y_pred_prob, axis=1)
         
-        # DI SINI KUNCI PENYELESAIAN ERRORNYA:
-        # Kita memasukkan total_positif dan total_negatif ke dalam metrik
+    
         metrics = {
             'accuracy': accuracy_score(y_true, y_pred),
             'precision': precision_score(y_true, y_pred, average='binary', zero_division=0),
